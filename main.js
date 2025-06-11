@@ -518,7 +518,7 @@ function closeForm() {
   formFields.innerHTML = '';
   currentEditId = null;
 }
-
+// từ chức năng thêm sủa xóa
 saveBtn.addEventListener('click', async () => {
   const inputs = formFields.querySelectorAll('input');
   const data = {};
@@ -533,7 +533,8 @@ saveBtn.addEventListener('click', async () => {
 });
 
   const method = currentEditId ? 'PUT' : 'POST';
-  const url = currentEditId ? `http://localhost:3000/api/gamestores/${currentEditId}` : 'http://localhost:3000/api/gamestores';
+  const url = currentEditId ? `http://localhost:3000/api/gamestores/${currentEditId}` : 
+                              'http://localhost:3000/api/gamestores';
 
   try {
     const res = await fetch(url, {
@@ -551,9 +552,10 @@ saveBtn.addEventListener('click', async () => {
 });
 
 formClose.addEventListener('click', closeForm);
-
+// Gắn sự kiện cho nút Thêm quán
 window.addData = () => openForm();
 
+// Gắn sự kiện cho sửa Thêm quán
 window.editData = () => {
   if (!selectedFeature) {
     alert('Vui lòng chọn một nhà hàng trên bản đồ để sửa.');
@@ -570,7 +572,7 @@ window.editData = () => {
   openForm(store);
 };
 
-
+// Gắn sự kiện cho nút xóa quán
 window.deleteData = async () => {
   if (!selectedFeature) {
     alert('Vui lòng chọn một nhà hàng trên bản đồ để xoá.');

@@ -6,11 +6,11 @@ const { MongoClient, ObjectId } = require('mongodb');
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+//Kết nối MongoDB
 const uri = "mongodb://localhost:27017"; 
 const client = new MongoClient(uri);
 const dbName = "QLQG";
-
+// Khởi động server và định nghĩa API
 async function startServer() {
   try {
     await client.connect();
