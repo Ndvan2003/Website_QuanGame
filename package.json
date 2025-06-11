@@ -1,0 +1,21 @@
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "server": "node server.js",
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "vite": "^5.4.10"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongodb": "^6.8.0",
+    "ol": "latest"
+  }
+}

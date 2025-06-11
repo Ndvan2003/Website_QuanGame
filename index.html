@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="https://openlayers.org/favicon.ico" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vị trí quán game</title>
+  </head>
+  <body>
+    <div id="map"></div>
+    <!-- Gợi ý tên quán -->
+    <div id="suggestion-box">
+     <h3> Gợi ý:</h3>
+     <ul id="suggestion-list"></ul>
+    </div>
+    <!-- Giao diện gộp tìm kiếm, lọc và vị trí -->
+    <div id="search-filter-box">
+      <input type="text" id="search-input" placeholder="Nhập tên hoặc địa chỉ quán game..." />
+      <select id="rating-filter">
+        <option value="all">Tất cả đánh giá</option>
+        <option value="5">5 ⭐⭐⭐⭐⭐</option>
+        <option value="4">4 ⭐⭐⭐⭐</option>
+        <option value="3">3 ⭐⭐⭐</option>
+        <option value="2">2 ⭐⭐</option>
+        <option value="1">1 ⭐</option>
+      </select>
+      <select id="price-filter">
+        <option value="all">Tất cả giá</option>
+        <option value="7">7.000</option>
+        <option value="8">8.000</option>
+        <option value="9">9.000</option>
+        <option value="10">10.000</option>
+      </select>
+      <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <button id="apply-filter">Lọc</button>
+      <button id="sort-by-distance">Quán gần nhất</button>
+      <button id="location-btn"><i class="fa-solid fa-location-crosshairs"></i> Vị trí của tôi</button>
+    </div>
+    <!--Thêm/sửa/xóa--> 
+    <div id="crud-box" class="crud-box">
+        <button onclick="addData()">➕ Thêm</button>
+        <button onclick="editData()">✏️ Sửa</button>
+        <button onclick="deleteData()">🗑️ Xóa</button>
+    </div>
+    <!-- Đã chèn form thêm/sửa -->
+    <div id="restaurant-form" class="form-container" style="display: none;">
+        <span id="form-close" class="form-close">&times;</span>
+        <h3 id="form-title">Thêm nhà hàng</h3>
+        <form id="form-fields"></form>
+        <button id="save-btn">Lưu</button>
+    </div>
+
+    
+   <!-- Popup bản đồ -->
+    <div id="popup" class="ol-popup">
+      <a href="#" id="popup-closer" class="ol-popup-closer"><i class="fa-solid fa-xmark"></i></a>
+      <div id="popup-content"></div>
+    </div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
