@@ -19,7 +19,7 @@ html, body {
   filter: drop-shadow(0 0 3px rgba(0,0,0,0.1));
 }
 
-/* ==== Search + Filter box ==== */
+/* thanh tìm kiếm */
 #search-filter-box {
   position: fixed;
   top: 15px;
@@ -136,7 +136,7 @@ html, body {
   color: #3b439c;
 }
 
-/* ==== Suggestion box (khuyên dùng) ==== */
+/* nút gợi ý */
 #suggestion-box {
   /*position: fixed;bottom: 25px;left: 20px;*//*sử dụng ở bên dưới góc trái*/
   position: fixed;
@@ -182,18 +182,6 @@ html, body {
   margin-right: 10px;
 }
 
-/* ==== Responsive ==== */
-@media only screen and (max-width: 600px) {
-  #search-filter-box, #suggestion-box {
-    width: auto;
-    left: 10px;
-    transform: none;
-    top: 10px;
-  }
-  #map {
-    height: 400px;
-  }
-}
 /*thêm/sửa/xóa*/
 #crud-box {
   position: fixed;
@@ -216,7 +204,7 @@ html, body {
   font-size: 13px;
   cursor: pointer;
 }
-/**/
+/*from trong thanh thêm sửa*/
 .form-container {
   position: absolute;
   top: 15%;
