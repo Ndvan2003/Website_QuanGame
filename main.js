@@ -14,6 +14,7 @@ import Overlay from 'ol/Overlay.js';
 import Text from 'ol/style/Text.js';
 import Fill from 'ol/style/Fill.js';
 import Stroke from 'ol/style/Stroke.js';
+import { toLonLat } from 'ol/proj.js';
 
 // Cấu hình popup hiển thị khi click vào marker 
 const container = document.getElementById('popup');
@@ -614,43 +615,41 @@ window.deleteData = async () => {
     console.error(err);
   }
 };
+// tạo lấy dữ liệu kinh độ và vĩ độ
+// Layer preview khi click
+const previewSource = new VectorSource();
+const previewLayer = new VectorLayer({ source: previewSource });
+map.addLayer(previewLayer);
 
-// Tạo layer preview marker
-const previewMarkerSource = new VectorSource();
-const previewMarkerLayer = new VectorLayer({
-  source: previewMarkerSource
-});
-map.addLayer(previewMarkerLayer);
-
-// Chỉ hoạt động khi đang mở form thêm nhà hàng
 map.on('click', function (evt) {
-  const formContainer = document.getElementById('restaurant-form');
-  const isVisible = formContainer && formContainer.style.display !== 'none';
-
-  if (!isVisible) return;
-
   const lonLat = toLonLat(evt.coordinate);
   const lon = lonLat[0].toFixed(6);
   const lat = lonLat[1].toFixed(6);
 
-  // Tìm ô nhập tọa độ trong form và gán giá trị
-  const coordinateInput = [...formFields.querySelectorAll('input')].find(input => input.name === 'coordinates');
+  const formContainer = document.getElementById('restaurant-form');
+  const isOpen = formContainer.style.display !== 'none';
+
+  // Nếu form chưa mở thì gọi openForm() để mở
+  if (!isOpen) {
+    openForm(); // Gọi hàm đã có sẵn trong mã để mở form Thêm
+  }
+
+  // Gán tọa độ vào ô input
+  const coordinateInput = [...document.querySelectorAll('#form-fields input')].find(input => input.name === 'coordinates');
   if (coordinateInput) {
     coordinateInput.value = `${lon},${lat}`;
   }
 
-  // Hiển thị marker preview tại vị trí được chọn
-  previewMarkerSource.clear();
-  const point = new Point(evt.coordinate);
-  const feature = new Feature({ geometry: point });
-  feature.setStyle(new Style({
+  // Thêm marker preview
+  previewSource.clear();
+  const marker = new Feature({
+    geometry: new Point(evt.coordinate)
+  });
+  marker.setStyle(new Style({
     image: new Icon({
       src: 'icon.png',
       scale: 0.05
     })
   }));
-  previewMarkerSource.addFeature(feature);
+  previewSource.addFeature(marker);
 });
-
-
-
