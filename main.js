@@ -49,8 +49,8 @@ closer.onclick = function () {
   closer.blur();
 };
 
-// bản đồ
-// === Khởi tạo bản đồ với tile từ OpenStreetMap ===
+
+//Khởi tạo bản đồ với tile từ OpenStreetMap
 const map = new Map({
   layers: [new TileLayer({ source: new OSM() })],
   overlays: [overlay],
@@ -109,7 +109,6 @@ function createMarker(store) {
 }
 
 // Lấy danh sách quán game từ API backend
-// Gọi API lấy danh sách quán game từ backend
 fetch('http://localhost:3000/api/gamestores')
   .then((response) => response.json())
   .then((data) => {
