@@ -1,21 +1,38 @@
+// Import các thư viện và module từ OpenLayers
 import './style.css';
+// Import các thư viện và module từ OpenLayers
 import Map from 'ol/Map.js';
+// Import các thư viện và module từ OpenLayers
 import View from 'ol/View.js';
+// Import các thư viện và module từ OpenLayers
 import TileLayer from 'ol/layer/Tile.js';
+// Import các thư viện và module từ OpenLayers
 import OSM from 'ol/source/OSM.js';
+// Import các thư viện và module từ OpenLayers
 import { fromLonLat } from 'ol/proj.js';
+// Import các thư viện và module từ OpenLayers
 import { Icon, Style } from 'ol/style.js';
+// Import các thư viện và module từ OpenLayers
 import LineString from 'ol/geom/LineString.js';
+// Import các thư viện và module từ OpenLayers
 import Feature from 'ol/Feature.js';
+// Import các thư viện và module từ OpenLayers
 import Point from 'ol/geom/Point.js';
+// Import các thư viện và module từ OpenLayers
 import { Vector as VectorSource } from 'ol/source.js';
+// Import các thư viện và module từ OpenLayers
 import { Vector as VectorLayer } from 'ol/layer.js';
+// Import các thư viện và module từ OpenLayers
 import Overlay from 'ol/Overlay.js';
+// Import các thư viện và module từ OpenLayers
 import Text from 'ol/style/Text.js';
+// Import các thư viện và module từ OpenLayers
 import Fill from 'ol/style/Fill.js';
+// Import các thư viện và module từ OpenLayers
 import Stroke from 'ol/style/Stroke.js';
 
 // popup
+// === Cấu hình popup hiển thị khi click vào marker ===
 const container = document.getElementById('popup');
 const content = document.getElementById('popup-content');
 const closer = document.getElementById('popup-closer');
@@ -33,6 +50,7 @@ closer.onclick = function () {
 };
 
 // bản đồ
+// === Khởi tạo bản đồ với tile từ OpenStreetMap ===
 const map = new Map({
   layers: [new TileLayer({ source: new OSM() })],
   overlays: [overlay],
@@ -50,17 +68,20 @@ const vectorLayer = new VectorLayer({
 
 map.addLayer(vectorLayer);
 
+// Biến toàn cục lưu dữ liệu quán game và vị trí người dùng
 let gameStores = [];
 let userLocation = null;
 let routeLayer = null;
 
 let markerLayers = [];
 
+// Xóa tất cả marker đang hiển thị trên bản đồ
 function clearAllMarkers() {
   markerLayers.forEach((layer) => map.removeLayer(layer));
   markerLayers = [];
 }
 
+// Tạo và hiển thị marker mới cho quán game
 function createMarker(store) {
   const marker = new Feature({
     geometry: new Point(fromLonLat(store.coordinates)),
@@ -88,6 +109,7 @@ function createMarker(store) {
 }
 
 // Lấy danh sách quán game từ API backend
+// Gọi API lấy danh sách quán game từ backend
 fetch('http://localhost:3000/api/gamestores')
   .then((response) => response.json())
   .then((data) => {
@@ -98,6 +120,7 @@ fetch('http://localhost:3000/api/gamestores')
 
 let popupIsOpen = false;
 
+// Sự kiện click vào marker để hiển thị popup thông tin
 map.on('singleclick', function (evt) {
   const coordinate = evt.coordinate;
   const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
@@ -138,6 +161,7 @@ closer.onclick = function () {
   return false;
 };
 
+// Lọc dữ liệu theo đánh giá và phí chơi
 document.getElementById('apply-filter').addEventListener('click', function () {
   const selectedRating = document.getElementById('rating-filter').value;
   const selectedPrice = document.getElementById('price-filter').value;
@@ -156,6 +180,7 @@ function searchStores(input) {
   }
 }
 
+// Hàm lọc danh sách quán theo tiêu chí
 function filterStoresByRatingAndPrice(rating, price) {
   let filteredStores = gameStores;
  if (rating !== 'all') {
@@ -185,6 +210,7 @@ if (price !== 'all') {
   }
 }
 
+// Tìm kiếm quán theo tên hoặc địa chỉ
 function search() {
   const addressInput = document
     .getElementById('search-input')
@@ -238,6 +264,7 @@ function search() {
 
 document.getElementById('search-btn').addEventListener('click', search);
 
+// Lấy vị trí hiện tại của người dùng và hiển thị lên bản đồ
 document.getElementById('location-btn').addEventListener('click', () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -298,6 +325,7 @@ document.getElementById('location-btn').addEventListener('click', () => {
   }
 });
 
+// Vẽ đường đi từ vị trí người dùng đến quán đã chọn
 function drawRoute(startCoord, endCoord) {
   if (routeLayer) {
     map.removeLayer(routeLayer);
@@ -355,6 +383,7 @@ function drawRoute(startCoord, endCoord) {
     });
 }
 
+// Tùy chỉnh style hiển thị cho marker quán game
 function createMarkerStyle(name) {
   return new Style({
     image: new Icon({
@@ -382,6 +411,7 @@ function createMarkerStyle(name) {
 const searchInput = document.getElementById('search-input');
 const suggestionList = document.getElementById('suggestion-list');
 
+// Tính năng gợi ý tên quán khi nhập liệu
 searchInput.addEventListener('input', function () {
   const input = this.value.toLowerCase();
   suggestionList.innerHTML = '';
@@ -419,6 +449,7 @@ function toRadians(degrees) {
   return degrees * Math.PI / 180;
 }
 
+// Tính khoảng cách giữa 2 tọa độ theo công thức Haversine
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const dLat = toRadians(lat2 - lat1);
@@ -432,6 +463,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
+// Tìm quán gần người dùng nhất
 document.getElementById('sort-by-distance').addEventListener('click', function () {
   if (!userLocation) {
     alert('Vui lòng bật "Vị trí của tôi" trước!');
@@ -475,6 +507,7 @@ const formClose = document.getElementById('form-close');
 let currentEditId = null;
 let selectedFeature = null;
 
+// Mở form thêm hoặc sửa quán
 function openForm(data = null) {
   formFields.innerHTML = '';
   currentEditId = data ? data._id : null;
@@ -518,7 +551,8 @@ function closeForm() {
   formFields.innerHTML = '';
   currentEditId = null;
 }
-// từ chức năng thêm sủa xóa
+
+// Xử lý lưu dữ liệu từ form thêm/sửa
 saveBtn.addEventListener('click', async () => {
   const inputs = formFields.querySelectorAll('input');
   const data = {};
@@ -533,8 +567,7 @@ saveBtn.addEventListener('click', async () => {
 });
 
   const method = currentEditId ? 'PUT' : 'POST';
-  const url = currentEditId ? `http://localhost:3000/api/gamestores/${currentEditId}` : 
-                              'http://localhost:3000/api/gamestores';
+  const url = currentEditId ? `http://localhost:3000/api/gamestores/${currentEditId}` : 'http://localhost:3000/api/gamestores';
 
   try {
     const res = await fetch(url, {
@@ -552,10 +585,11 @@ saveBtn.addEventListener('click', async () => {
 });
 
 formClose.addEventListener('click', closeForm);
+
 // Gắn sự kiện cho nút Thêm quán
 window.addData = () => openForm();
 
-// Gắn sự kiện cho sửa Thêm quán
+// Gắn sự kiện cho nút Sửa quán
 window.editData = () => {
   if (!selectedFeature) {
     alert('Vui lòng chọn một nhà hàng trên bản đồ để sửa.');
@@ -572,7 +606,8 @@ window.editData = () => {
   openForm(store);
 };
 
-// Gắn sự kiện cho nút xóa quán
+
+// Gắn sự kiện cho nút Xóa quán
 window.deleteData = async () => {
   if (!selectedFeature) {
     alert('Vui lòng chọn một nhà hàng trên bản đồ để xoá.');
@@ -597,7 +632,6 @@ window.deleteData = async () => {
     console.error(err);
   }
 };
-
 
 
 
