@@ -238,6 +238,7 @@ html, body {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+/*nút đóng form*/
 .form-close {
   position: absolute;
   top: 8px;
@@ -252,7 +253,7 @@ html, body {
 .form-close:hover {
   color: #000;
 }
-
+/*Nút lưu form */
 #save-btn {
   margin-top: 10px;
   background-color: #299B63;
