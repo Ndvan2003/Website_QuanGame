@@ -1,38 +1,21 @@
-// Import các thư viện và module từ OpenLayers
 import './style.css';
-// Import các thư viện và module từ OpenLayers
 import Map from 'ol/Map.js';
-// Import các thư viện và module từ OpenLayers
 import View from 'ol/View.js';
-// Import các thư viện và module từ OpenLayers
 import TileLayer from 'ol/layer/Tile.js';
-// Import các thư viện và module từ OpenLayers
 import OSM from 'ol/source/OSM.js';
-// Import các thư viện và module từ OpenLayers
 import { fromLonLat } from 'ol/proj.js';
-// Import các thư viện và module từ OpenLayers
 import { Icon, Style } from 'ol/style.js';
-// Import các thư viện và module từ OpenLayers
 import LineString from 'ol/geom/LineString.js';
-// Import các thư viện và module từ OpenLayers
 import Feature from 'ol/Feature.js';
-// Import các thư viện và module từ OpenLayers
 import Point from 'ol/geom/Point.js';
-// Import các thư viện và module từ OpenLayers
 import { Vector as VectorSource } from 'ol/source.js';
-// Import các thư viện và module từ OpenLayers
 import { Vector as VectorLayer } from 'ol/layer.js';
-// Import các thư viện và module từ OpenLayers
 import Overlay from 'ol/Overlay.js';
-// Import các thư viện và module từ OpenLayers
 import Text from 'ol/style/Text.js';
-// Import các thư viện và module từ OpenLayers
 import Fill from 'ol/style/Fill.js';
-// Import các thư viện và module từ OpenLayers
 import Stroke from 'ol/style/Stroke.js';
 
-// popup
-// === Cấu hình popup hiển thị khi click vào marker ===
+// Cấu hình popup hiển thị khi click vào marker 
 const container = document.getElementById('popup');
 const content = document.getElementById('popup-content');
 const closer = document.getElementById('popup-closer');
@@ -632,6 +615,42 @@ window.deleteData = async () => {
   }
 };
 
+// Tạo layer preview marker
+const previewMarkerSource = new VectorSource();
+const previewMarkerLayer = new VectorLayer({
+  source: previewMarkerSource
+});
+map.addLayer(previewMarkerLayer);
+
+// Chỉ hoạt động khi đang mở form thêm nhà hàng
+map.on('click', function (evt) {
+  const formContainer = document.getElementById('restaurant-form');
+  const isVisible = formContainer && formContainer.style.display !== 'none';
+
+  if (!isVisible) return;
+
+  const lonLat = toLonLat(evt.coordinate);
+  const lon = lonLat[0].toFixed(6);
+  const lat = lonLat[1].toFixed(6);
+
+  // Tìm ô nhập tọa độ trong form và gán giá trị
+  const coordinateInput = [...formFields.querySelectorAll('input')].find(input => input.name === 'coordinates');
+  if (coordinateInput) {
+    coordinateInput.value = `${lon},${lat}`;
+  }
+
+  // Hiển thị marker preview tại vị trí được chọn
+  previewMarkerSource.clear();
+  const point = new Point(evt.coordinate);
+  const feature = new Feature({ geometry: point });
+  feature.setStyle(new Style({
+    image: new Icon({
+      src: 'icon.png',
+      scale: 0.05
+    })
+  }));
+  previewMarkerSource.addFeature(feature);
+});
 
 
 
