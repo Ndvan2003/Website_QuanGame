@@ -119,6 +119,7 @@ map.on('singleclick', function (evt) {
 
   if (feature) {
     const properties = feature.getProperties();
+    const giatrungbinh = Number(properties.ChiPhiKhac).toLocaleString('vi-VN')
     content.innerHTML = `
       <p><strong>Tên:</strong> ${properties.name}</p>
       <p><strong>Địa chỉ:</strong> ${properties.DiaChi}</p>
@@ -406,7 +407,7 @@ searchInput.addEventListener('input', function () {
   );
 
   clearAllMarkers();
-
+  
   matchedStores.forEach((store) => {
     createMarker(store);
     const li = document.createElement('li');
@@ -428,6 +429,7 @@ searchInput.addEventListener('input', function () {
   }
 });
 
+////
 function toRadians(degrees) {
   return degrees * Math.PI / 180;
 }
@@ -458,27 +460,36 @@ document.getElementById('sort-by-distance').addEventListener('click', function (
     return;
   }
 
-  let nearestStore = null;
-  let minDistance = Infinity;
-
-  gameStores.forEach((store) => {
+  // Tính khoảng cách và lưu lại
+  const storesWithDistance = gameStores.map((store) => {
     const [lon2, lat2] = store.coordinates;
     const [lon1, lat1] = userLocation;
     const distance = calculateDistance(lat1, lon1, lat2, lon2);
-    if (distance < minDistance) {
-      minDistance = distance;
-      nearestStore = store;
-    }
+    return { ...store, distance };
   });
 
-  if (nearestStore) {
-    clearAllMarkers();
-    createMarker(nearestStore);
-    const coordinates = fromLonLat(nearestStore.coordinates);
-    map.getView().animate({ center: coordinates, zoom: 17, duration: 1000 });
+  // Sắp xếp tăng dần theo khoảng cách và lấy 5 quán gần nhất
+  const nearestStores = storesWithDistance.sort((a, b) => a.distance - b.distance).slice(0, 5);
 
-    drawRoute(userLocation, nearestStore.coordinates);
-  }
+  clearAllMarkers();
+  suggestionList.innerHTML = '';
+
+  nearestStores.forEach((store) => {
+    createMarker(store);
+
+    const li = document.createElement('li');
+    li.innerHTML = `<i class="fa-solid fa-gamepad"></i> ${store.name} - ${(store.distance * 1000).toFixed(0)}m`;
+    li.addEventListener('click', () => {
+      clearAllMarkers();
+      createMarker(store);
+      map.getView().animate({ center: fromLonLat(store.coordinates), zoom: 17, duration: 1000 });
+      drawRoute(userLocation, store.coordinates);
+    });
+    suggestionList.appendChild(li);
+  });
+
+  const centerCoords = fromLonLat(nearestStores[0].coordinates);
+  map.getView().animate({ center: centerCoords, zoom: 16, duration: 1000 });
 });
 
 // ========== THÊM / SỬA / XOÁ ========== //
